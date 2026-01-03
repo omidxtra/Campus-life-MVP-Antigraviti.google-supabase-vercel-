@@ -6,21 +6,23 @@ const Schedule: React.FC = () => {
 
     const weeklySchedule: Record<string, any[]> = {
         Monday: [
-            { id: 1, course: 'CS101 Intro to CS', time: '09:00 - 10:30', room: '301', type: 'Lecture' },
-            { id: 2, course: 'MATH201 Calculus II', time: '11:00 - 12:30', room: '205', type: 'Lecture' },
+            { id: 1, course: 'AIDE1101 Intro to Data Science Programming', time: '09:00 - 11:20', room: 'IKB 13', type: 'Lecture' },
+            { id: 2, course: 'AIDE1101 Intro to Data Science Programming', time: '12:20 - 13:50', room: 'E-Lab 1', type: 'Lab' },
         ],
         Tuesday: [
-            { id: 3, course: 'PHYS101 Physics Lab', time: '14:00 - 16:00', room: 'Lab B', type: 'Lab' },
+            { id: 3, course: 'CITF1002 Career Planning', time: '10:40 - 12:10', room: 'D5', type: 'Lecture' },
         ],
         Wednesday: [
-            { id: 1, course: 'CS101 Intro to CS', time: '09:00 - 10:30', room: '301', type: 'Lecture' },
-            { id: 2, course: 'MATH201 Calculus II', time: '11:00 - 12:30', room: '205', type: 'Lecture' },
+            { id: 4, course: 'MATH1102 Calculus I', time: '09:00 - 11:20', room: 'D5', type: 'Lecture' },
+            { id: 5, course: 'CITF1003 Intro to IT', time: '12:20 - 13:50', room: 'E-Lab 1', type: 'Lab' },
+            { id: 6, course: 'ENGL1101 English for Academic Purposes', time: '14:00 - 15:30', room: 'D5', type: 'Lecture' },
         ],
         Thursday: [
-            { id: 4, course: 'ART101 Art History', time: '10:00 - 11:30', room: 'Art Hall', type: 'Lecture' },
+            { id: 7, course: 'PHYS1101 Physics I', time: '13:10 - 15:30', room: 'D5', type: 'Lecture' },
         ],
         Friday: [
-            { id: 2, course: 'MATH201 Calculus II', time: '11:00 - 12:00', room: '205', type: 'Tutorial' },
+            { id: 8, course: 'MATH1102-PS Calculus I', time: '14:00 - 15:30', room: 'D5', type: 'Lab' },
+            { id: 9, course: 'MATH1102-PS Calculus I', time: '15:40 - 17:10', room: 'IK 204', type: 'Lab' },
         ],
     };
 
