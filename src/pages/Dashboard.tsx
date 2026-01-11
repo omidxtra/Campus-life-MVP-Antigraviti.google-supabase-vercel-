@@ -1,7 +1,10 @@
 import React from 'react';
 import { Clock, MapPin, Bell, Calendar } from 'lucide-react';
+import Modal from '../components/Modal';
 
 const Dashboard: React.FC = () => {
+    const [isAnnouncementsModalOpen, setIsAnnouncementsModalOpen] = React.useState(false);
+
     // Mock Data
     const todayClasses = [
         { title: 'Computer Science 101', time: '09:00 AM - 10:30 AM', location: 'Room 301', professor: 'Dr. Smith' },
@@ -97,12 +100,37 @@ const Dashboard: React.FC = () => {
                                 </div>
                             ))}
                         </div>
-                        <button className="w-full mt-4 py-2 text-sm text-indigo-600 dark:text-indigo-400 font-medium hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg transition-colors">
+                        <button
+                            onClick={() => setIsAnnouncementsModalOpen(true)}
+                            className="w-full mt-4 py-2 text-sm text-indigo-600 dark:text-indigo-400 font-medium hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg transition-colors"
+                        >
                             View All
                         </button>
                     </div>
                 </div>
             </div>
+
+            <Modal
+                isOpen={isAnnouncementsModalOpen}
+                onClose={() => setIsAnnouncementsModalOpen(false)}
+                title="All Announcements"
+            >
+                <div className="space-y-6">
+                    {announcements.map((ann, i) => (
+                        <div key={i} className="pb-6 border-b border-gray-100 dark:border-gray-700 last:border-0 last:pb-0">
+                            <div className="flex items-center justify-between mb-2">
+                                <span className="text-xs font-semibold px-2 py-1 rounded bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">News</span>
+                                <span className="text-xs text-gray-400 flex items-center gap-1">
+                                    <Calendar className="w-3 h-3" />
+                                    {ann.date}
+                                </span>
+                            </div>
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{ann.title}</h3>
+                            <p className="text-gray-600 dark:text-gray-300 leading-relaxed">{ann.content}</p>
+                        </div>
+                    ))}
+                </div>
+            </Modal>
         </div>
     );
 };

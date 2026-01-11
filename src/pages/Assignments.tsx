@@ -1,18 +1,65 @@
 import React, { useState } from 'react';
-import { Calendar, CheckCircle2, Circle, AlertCircle } from 'lucide-react';
+import { Calendar, CheckCircle2, Circle, AlertCircle, Trash2 } from 'lucide-react';
+import Modal from '../components/Modal';
+
+interface Task {
+    id: number;
+    title: string;
+    course: string;
+    due: string;
+    status: 'pending' | 'completed';
+    priority: 'high' | 'medium' | 'low';
+}
 
 const Assignments: React.FC = () => {
-    const [tasks, setTasks] = useState([
+    const [tasks, setTasks] = useState<Task[]>([
         { id: 1, title: 'Calculus Problem Set 3', course: 'Calculus II', due: '2026-10-15', status: 'pending', priority: 'high' },
         { id: 2, title: 'Read Chapter 4', course: 'Intro to CS', due: '2026-10-16', status: 'completed', priority: 'medium' },
         { id: 3, title: 'Lab Report', course: 'Physics Lab', due: '2026-10-18', status: 'pending', priority: 'medium' },
         { id: 4, title: 'Art Analysis Essay', course: 'Art History', due: '2026-10-25', status: 'pending', priority: 'low' },
     ]);
 
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [newTask, setNewTask] = useState<Partial<Task>>({
+        title: '',
+        course: '',
+        due: '',
+        priority: 'medium',
+        status: 'pending'
+    });
+
     const toggleTask = (id: number) => {
         setTasks(tasks.map(t =>
             t.id === id ? { ...t, status: t.status === 'completed' ? 'pending' : 'completed' } : t
         ));
+    };
+
+    const deleteTask = (id: number) => {
+        setTasks(tasks.filter(t => t.id !== id));
+    };
+
+    const addTask = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!newTask.title || !newTask.course || !newTask.due) return;
+
+        const task: Task = {
+            id: Date.now(),
+            title: newTask.title,
+            course: newTask.course,
+            due: newTask.due,
+            priority: newTask.priority as 'high' | 'medium' | 'low',
+            status: 'pending'
+        };
+
+        setTasks([...tasks, task]);
+        setIsAddModalOpen(false);
+        setNewTask({
+            title: '',
+            course: '',
+            due: '',
+            priority: 'medium',
+            status: 'pending'
+        });
     };
 
     const getPriorityColor = (p: string) => {
@@ -28,7 +75,10 @@ const Assignments: React.FC = () => {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Assignments</h1>
-                <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium">
+                <button
+                    onClick={() => setIsAddModalOpen(true)}
+                    className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium"
+                >
                     + Add New
                 </button>
             </div>
@@ -61,11 +111,94 @@ const Assignments: React.FC = () => {
                                     {new Date(task.due) < new Date() && task.status !== 'completed' ? <AlertCircle className="w-4 h-4" /> : <Calendar className="w-4 h-4" />}
                                     {new Date(task.due).toLocaleDateString()}
                                 </div>
+                                {task.status === 'completed' && (
+                                    <button
+                                        onClick={() => deleteTask(task.id)}
+                                        className="p-1 text-gray-400 hover:text-red-500 transition-colors"
+                                        title="Delete Assignment"
+                                    >
+                                        <Trash2 className="w-5 h-5" />
+                                    </button>
+                                )}
                             </div>
                         </div>
                     ))}
+                    {tasks.length === 0 && (
+                        <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+                            No assignments found. Add one to get started!
+                        </div>
+                    )}
                 </div>
             </div>
+
+            <Modal
+                isOpen={isAddModalOpen}
+                onClose={() => setIsAddModalOpen(false)}
+                title="Add New Assignment"
+            >
+                <form onSubmit={addTask} className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Title
+                        </label>
+                        <input
+                            type="text"
+                            required
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                            value={newTask.title}
+                            onChange={e => setNewTask({ ...newTask, title: e.target.value })}
+                            placeholder="e.g., Calculus Problem Set 3"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Course
+                        </label>
+                        <input
+                            type="text"
+                            required
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                            value={newTask.course}
+                            onChange={e => setNewTask({ ...newTask, course: e.target.value })}
+                            placeholder="e.g., Calculus II"
+                        />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Due Date
+                            </label>
+                            <input
+                                type="date"
+                                required
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                                value={newTask.due}
+                                onChange={e => setNewTask({ ...newTask, due: e.target.value })}
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Priority
+                            </label>
+                            <select
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                                value={newTask.priority}
+                                onChange={e => setNewTask({ ...newTask, priority: e.target.value as any })}
+                            >
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button
+                        type="submit"
+                        className="w-full py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium"
+                    >
+                        Add Assignment
+                    </button>
+                </form>
+            </Modal>
         </div>
     );
 };
