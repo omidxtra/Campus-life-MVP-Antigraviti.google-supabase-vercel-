@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Bell, Moon, Sun, Lock, Globe, ChevronRight, Check } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import Modal from '../components/Modal';
 
 const Settings: React.FC = () => {
     const { isDarkMode, toggleTheme } = useTheme();
+    const { updatePassword } = useAuth();
     const [notificationsEnabled, setNotificationsEnabled] = useState(true);
     const [language, setLanguage] = useState('English');
     const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
@@ -17,11 +19,28 @@ const Settings: React.FC = () => {
         confirm: ''
     });
 
-    const handlePasswordChange = (e: React.FormEvent) => {
+    const handlePasswordChange = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Mock password change logic
-        setIsPasswordModalOpen(false);
-        setPasswordForm({ current: '', new: '', confirm: '' });
+
+        if (passwordForm.new !== passwordForm.confirm) {
+            alert('New passwords do not match');
+            return;
+        }
+
+        if (passwordForm.new.length < 6) {
+            alert('Password must be at least 6 characters');
+            return;
+        }
+
+        const { error } = await updatePassword(passwordForm.new);
+
+        if (error) {
+            alert('Error updating password: ' + error.message);
+        } else {
+            alert('Password updated successfully!');
+            setIsPasswordModalOpen(false);
+            setPasswordForm({ current: '', new: '', confirm: '' });
+        }
     };
 
     const languages = ['English', 'Spanish', 'French', 'German', 'Chinese', 'Japanese'];
@@ -177,13 +196,13 @@ const Settings: React.FC = () => {
                                 setIsLanguageModalOpen(false);
                             }}
                             className={`w-full flex items-center justify-between p-4 rounded-xl border transition-all ${language === lang
-                                    ? 'border-indigo-600 bg-indigo-50 dark:border-indigo-400 dark:bg-indigo-900/20'
-                                    : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                                ? 'border-indigo-600 bg-indigo-50 dark:border-indigo-400 dark:bg-indigo-900/20'
+                                : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
                                 }`}
                         >
                             <span className={`font-medium ${language === lang
-                                    ? 'text-indigo-700 dark:text-indigo-300'
-                                    : 'text-gray-700 dark:text-gray-300'
+                                ? 'text-indigo-700 dark:text-indigo-300'
+                                : 'text-gray-700 dark:text-gray-300'
                                 }`}>
                                 {lang}
                             </span>

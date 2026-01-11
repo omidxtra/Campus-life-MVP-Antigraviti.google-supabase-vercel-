@@ -12,12 +12,24 @@ interface Task {
 }
 
 const Assignments: React.FC = () => {
-    const [tasks, setTasks] = useState<Task[]>([
-        { id: 1, title: 'Calculus Problem Set 3', course: 'Calculus II', due: '2026-10-15', status: 'pending', priority: 'high' },
-        { id: 2, title: 'Read Chapter 4', course: 'Intro to CS', due: '2026-10-16', status: 'completed', priority: 'medium' },
-        { id: 3, title: 'Lab Report', course: 'Physics Lab', due: '2026-10-18', status: 'pending', priority: 'medium' },
-        { id: 4, title: 'Art Analysis Essay', course: 'Art History', due: '2026-10-25', status: 'pending', priority: 'low' },
-    ]);
+    // Initialize from localStorage or fallback to default mock data
+    const [tasks, setTasks] = useState<Task[]>(() => {
+        const saved = localStorage.getItem('assignments');
+        if (saved) {
+            return JSON.parse(saved);
+        }
+        return [
+            { id: 1, title: 'Calculus Problem Set 3', course: 'Calculus II', due: '2026-10-15', status: 'pending', priority: 'high' },
+            { id: 2, title: 'Read Chapter 4', course: 'Intro to CS', due: '2026-10-16', status: 'completed', priority: 'medium' },
+            { id: 3, title: 'Lab Report', course: 'Physics Lab', due: '2026-10-18', status: 'pending', priority: 'medium' },
+            { id: 4, title: 'Art Analysis Essay', course: 'Art History', due: '2026-10-25', status: 'pending', priority: 'low' },
+        ];
+    });
+
+    // Save to localStorage whenever tasks change
+    React.useEffect(() => {
+        localStorage.setItem('assignments', JSON.stringify(tasks));
+    }, [tasks]);
 
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [newTask, setNewTask] = useState<Partial<Task>>({
@@ -35,7 +47,9 @@ const Assignments: React.FC = () => {
     };
 
     const deleteTask = (id: number) => {
-        setTasks(tasks.filter(t => t.id !== id));
+        if (confirm('Are you sure you want to delete this assignment forever?')) {
+            setTasks(tasks.filter(t => t.id !== id));
+        }
     };
 
     const addTask = (e: React.FormEvent) => {
@@ -111,15 +125,13 @@ const Assignments: React.FC = () => {
                                     {new Date(task.due) < new Date() && task.status !== 'completed' ? <AlertCircle className="w-4 h-4" /> : <Calendar className="w-4 h-4" />}
                                     {new Date(task.due).toLocaleDateString()}
                                 </div>
-                                {task.status === 'completed' && (
-                                    <button
-                                        onClick={() => deleteTask(task.id)}
-                                        className="p-1 text-gray-400 hover:text-red-500 transition-colors"
-                                        title="Delete Assignment"
-                                    >
-                                        <Trash2 className="w-5 h-5" />
-                                    </button>
-                                )}
+                                <button
+                                    onClick={() => deleteTask(task.id)}
+                                    className="p-1 text-gray-400 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"
+                                    title="Delete Assignment"
+                                >
+                                    <Trash2 className="w-5 h-5" />
+                                </button>
                             </div>
                         </div>
                     ))}

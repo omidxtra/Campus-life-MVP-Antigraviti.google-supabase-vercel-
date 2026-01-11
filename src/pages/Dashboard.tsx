@@ -1,16 +1,14 @@
 import React from 'react';
 import { Clock, MapPin, Bell, Calendar } from 'lucide-react';
 import Modal from '../components/Modal';
+import { weeklySchedule } from '../data/schedule';
 
 const Dashboard: React.FC = () => {
     const [isAnnouncementsModalOpen, setIsAnnouncementsModalOpen] = React.useState(false);
 
-    // Mock Data
-    const todayClasses = [
-        { title: 'Computer Science 101', time: '09:00 AM - 10:30 AM', location: 'Room 301', professor: 'Dr. Smith' },
-        { title: 'Calculus II', time: '11:00 AM - 12:30 PM', location: 'Room 205', professor: 'Prof. Johnson' },
-        { title: 'Physics Lab', time: '02:00 PM - 04:00 PM', location: 'Lab B', professor: 'Dr. Brown' },
-    ];
+    // Get today's classes
+    const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+    const todayClasses = weeklySchedule[today] || [];
 
     const announcements = [
         { title: 'Campus Job Fair', date: 'Oct 15, 2026', content: 'Join us for the annual job fair at the Student Center.' },
@@ -29,7 +27,11 @@ const Dashboard: React.FC = () => {
             {/* Welcome Section */}
             <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-6 text-white shadow-lg">
                 <h1 className="text-3xl font-bold mb-2">Hello, Student! 👋</h1>
-                <p className="opacity-90">Ready for another productive day? You have 3 classes today.</p>
+                <p className="opacity-90">
+                    {todayClasses.length > 0
+                        ? `Ready for another productive day? You have ${todayClasses.length} classes today.`
+                        : 'No classes scheduled for today. Enjoy your free time!'}
+                </p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -56,24 +58,30 @@ const Dashboard: React.FC = () => {
                         </div>
 
                         <div className="space-y-4">
-                            {todayClasses.map((cls, index) => (
-                                <div key={index} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border-l-4 border-indigo-500">
-                                    <div>
-                                        <h3 className="font-semibold text-gray-900 dark:text-white">{cls.title}</h3>
-                                        <p className="text-sm text-gray-500 dark:text-gray-400">{cls.professor}</p>
-                                    </div>
-                                    <div className="mt-2 sm:mt-0 flex items-center gap-4 text-sm text-gray-600 dark:text-gray-300">
-                                        <div className="flex items-center gap-1">
-                                            <Clock className="w-4 h-4" />
-                                            {cls.time}
+                            {todayClasses.length > 0 ? (
+                                todayClasses.map((cls, index) => (
+                                    <div key={index} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border-l-4 border-indigo-500">
+                                        <div>
+                                            <h3 className="font-semibold text-gray-900 dark:text-white">{cls.course}</h3>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400">{cls.type}</p>
                                         </div>
-                                        <div className="flex items-center gap-1">
-                                            <MapPin className="w-4 h-4" />
-                                            {cls.location}
+                                        <div className="mt-2 sm:mt-0 flex items-center gap-4 text-sm text-gray-600 dark:text-gray-300">
+                                            <div className="flex items-center gap-1">
+                                                <Clock className="w-4 h-4" />
+                                                {cls.time}
+                                            </div>
+                                            <div className="flex items-center gap-1">
+                                                <MapPin className="w-4 h-4" />
+                                                {cls.room}
+                                            </div>
                                         </div>
                                     </div>
+                                ))
+                            ) : (
+                                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                                    <p>No classes scheduled for today.</p>
                                 </div>
-                            ))}
+                            )}
                         </div>
                     </div>
                 </div>
