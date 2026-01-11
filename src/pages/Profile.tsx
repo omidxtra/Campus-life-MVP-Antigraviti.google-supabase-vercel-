@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, Mail, Hash, BookOpen, Edit2, Save, X } from 'lucide-react';
+import { User, Mail, Hash, BookOpen, Edit2, Save } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import Modal from '../components/Modal';
 

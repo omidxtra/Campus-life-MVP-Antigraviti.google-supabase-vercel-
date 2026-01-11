@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Users, BookOpen, MessageCircle, Plus, Calendar, Clock, CheckCircle2 } from 'lucide-react';
+import { Users, BookOpen, Plus, Clock, CheckCircle2 } from 'lucide-react';
 import Modal from '../components/Modal';
 
 interface Group {
@@ -119,8 +119,8 @@ const StudyGroups: React.FC = () => {
                             onClick={() => handleJoinClick(group)}
                             disabled={joinedGroups.includes(group.id) || group.members >= group.max}
                             className={`w-full mt-4 py-2 border font-medium rounded-lg transition-colors flex items-center justify-center gap-2 ${joinedGroups.includes(group.id)
-                                    ? 'bg-green-50 dark:bg-green-900/20 border-green-200 text-green-600 dark:text-green-400 cursor-default'
-                                    : 'border-indigo-600 dark:border-indigo-500 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/10'
+                                ? 'bg-green-50 dark:bg-green-900/20 border-green-200 text-green-600 dark:text-green-400 cursor-default'
+                                : 'border-indigo-600 dark:border-indigo-500 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/10'
                                 }`}
                         >
                             {joinedGroups.includes(group.id) ? (

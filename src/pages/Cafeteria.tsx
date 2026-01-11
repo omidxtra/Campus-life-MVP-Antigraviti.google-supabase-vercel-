@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Coffee, Pizza, Utensils, Search, ShoppingCart, CreditCard, Plus, Minus, Trash2 } from 'lucide-react';
+import { Search, ShoppingCart, CreditCard, Plus, Minus, Trash2 } from 'lucide-react';
 import Modal from '../components/Modal';
 
 // Images
@@ -87,7 +87,7 @@ const Cafeteria: React.FC = () => {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Cafeteria Menu</h1>
                 <div className="flex items-center gap-4">
-                    <button 
+                    <button
                         onClick={() => setIsCartOpen(true)}
                         className="relative p-2 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors"
                     >
@@ -128,8 +128,8 @@ const Cafeteria: React.FC = () => {
                 {filteredItems.map((item) => (
                     <div key={item.id} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-md transition-all group">
                         <div className="h-48 overflow-hidden relative">
-                            <img 
-                                src={item.image} 
+                            <img
+                                src={item.image}
                                 alt={item.name}
                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                             />
@@ -145,7 +145,7 @@ const Cafeteria: React.FC = () => {
                                 <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 rounded-full text-xs">{item.category}</span>
                                 <span>{item.calories} cal</span>
                             </div>
-                            <button 
+                            <button
                                 onClick={() => addToCart(item)}
                                 className="w-full py-2 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 font-medium rounded-lg hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white transition-all transform active:scale-95 flex items-center justify-center gap-2"
                             >
@@ -174,7 +174,7 @@ const Cafeteria: React.FC = () => {
                                         <div className="text-sm text-gray-500 dark:text-gray-400">${item.price.toFixed(2)} each</div>
                                     </div>
                                     <div className="flex items-center gap-3 bg-white dark:bg-gray-800 rounded-lg p-1 border border-gray-200 dark:border-gray-700">
-                                        <button 
+                                        <button
                                             onClick={() => updateQuantity(item.id, -1)}
                                             className="p-1 hover:text-indigo-600 disabled:opacity-50"
                                             disabled={item.quantity <= 1}
@@ -182,14 +182,14 @@ const Cafeteria: React.FC = () => {
                                             <Minus className="w-4 h-4" />
                                         </button>
                                         <span className="font-medium w-4 text-center">{item.quantity}</span>
-                                        <button 
+                                        <button
                                             onClick={() => updateQuantity(item.id, 1)}
                                             className="p-1 hover:text-indigo-600"
                                         >
                                             <Plus className="w-4 h-4" />
                                         </button>
                                     </div>
-                                    <button 
+                                    <button
                                         onClick={() => removeFromCart(item.id)}
                                         className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors"
                                     >
@@ -198,21 +198,20 @@ const Cafeteria: React.FC = () => {
                                 </div>
                             ))}
                         </div>
-                        
+
                         <div className="border-t border-gray-100 dark:border-gray-700 pt-4 space-y-4">
                             <div className="flex justify-between items-center text-lg font-bold text-gray-900 dark:text-white">
                                 <span>Total</span>
                                 <span>${cartTotal.toFixed(2)}</span>
                             </div>
-                            
+
                             <button
                                 onClick={handlePayment}
                                 disabled={isPaymentSuccess}
-                                className={`w-full py-3 rounded-xl font-bold text-white flex items-center justify-center gap-2 transition-all ${
-                                    isPaymentSuccess 
-                                    ? 'bg-green-500' 
-                                    : 'bg-indigo-600 hover:bg-indigo-700 shadow-lg hover:shadow-indigo-500/25'
-                                }`}
+                                className={`w-full py-3 rounded-xl font-bold text-white flex items-center justify-center gap-2 transition-all ${isPaymentSuccess
+                                        ? 'bg-green-500'
+                                        : 'bg-indigo-600 hover:bg-indigo-700 shadow-lg hover:shadow-indigo-500/25'
+                                    }`}
                             >
                                 {isPaymentSuccess ? (
                                     <>Processing...</>
